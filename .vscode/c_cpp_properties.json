@@ -1,0 +1,39 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/vasily/arduino/arduino-1.8.12/tools/**",
+                "/home/vasily/Arduino/libraries/**",
+                "/home/vasily/arduino/arduino-1.8.12/libraries/**",
+                "/home/vasily/arduino/arduino-1.8.12/hardware/tools/**",
+                "/home/vasily/arduino/arduino-1.8.12/hardware/arduino/avr/**",
+                "${workspaceFolder}/**",
+                "/home/vasily/arduino/arduino-1.8.12/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
+                "/home/vasily/arduino/arduino-1.8.12/hardware/arduino/avr/cores/arduino",
+                "/home/vasily/arduino/arduino-1.8.12/hardware/arduino/avr/variants/standard",
+                "/home/vasily/arduino-1.8.13",
+                "/home/vasily/arduino/arduino-1.8.12/hardware/tools/avr/avr/include"
+            ],
+            "browse": {
+                "path": [
+                    "/home/vasily/arduino/arduino-1.8.12/hardware/tools",
+                    "/home/vasily/arduino/arduino-1.8.12/hardware/arduino/avr",
+                    "/home/vasily/arduino/arduino-1.8.12/hardware/tools/avr/avr/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "defines": [
+                "USBCON"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "forcedInclude": [
+                "/home/vasily/arduino/arduino-1.8.12/hardware/arduino/avr/cores/arduino/Arduino.h"
+            ]
+        }
+    ],
+    "version": 4
+}

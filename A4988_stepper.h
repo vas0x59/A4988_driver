@@ -28,6 +28,27 @@ enum Mode {
 //     int min_speed;
 // };
 
+class LinearLeadScrew: public A4988_Stepper
+{
+public:
+    LinearLeadScrew(double screw_step) { _t = (double)_steps_per_turn*(double)_microstep/_screw_step; }
+    double mm2steps(double distance) { return _t * distance; }
+    double getCurrentPos() { return getPoseSteps()*getMicroStep()/_t; }
+private:
+    double _t;
+};
+
+class LinearBelt: public A4988_Stepper
+{
+public:
+    LinearBelt(double belt_step, int number_teeth) { _t = (double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth); }
+    double mm2steps(double distance) { return _t * distance; }
+    double getCurrentPos() { return getPoseSteps()*getMicroStep()/_t; }
+private:
+    double _t;
+};
+
+
 class A4988_Stepper
 {
 private:
@@ -92,11 +113,6 @@ public:
     // float  getTargetSpeedRadians() {return _target_speed*((2*PI)/_steps_per_turn);};
     double   getSpeedSteps() {return (double)_current_speed/_microstep;};
     double   getSpeedDegrees() {return getSpeedSteps()*(360.0/_steps_per_turn);};
-
-
-
-    double leadScrew(double distance, double screw_step) { return ((double)_steps_per_turn*(double)_microstep/screw_step) * distance; }
-    double belt(double distance, double belt_step, int number_teeth) { return ((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)) * distance; }
 
 
 
@@ -174,6 +190,7 @@ public:
         return _is_moving;
     };
     void reset() {_current_pose = 0; };
+    int getMicroStep() { return _microstep; };
     void setMicroStep(MicroStepMode mode) {
         _microstep = mode;
         if (_ms_pins[0] != -1) 

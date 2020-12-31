@@ -26,7 +26,7 @@
     setMicroStep(mode); // Установка дробления шага
     getMicroStep(); // Получение текущего дробления шага
 
-Установка скорости в **SPEED**
+Установка скорости в **POSE**
 
     setStdSpeedSteps(speed); // шаг/с
     setStdSpeedDegrees(speed); // град/с
@@ -36,7 +36,7 @@
     ABSOLUTE - абсолютная
     RELATIVE - относительная
 
-Установка скорости в **POSE**
+Установка скорости в **SPEED**
 
     setTargetSpeedSteps(speed); // шаг/с
     setTargetSpeedDegrees(speed); // град/с

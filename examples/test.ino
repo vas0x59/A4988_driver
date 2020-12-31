@@ -9,12 +9,12 @@ void setup() {
     // stepper.setTargetSpeedDegrees(4);
     stepper.setStdSpeedDegrees(720);
     Serial.begin(115200);
-    Serial.print(stepper.getTargetSpeedSteps());
-    stepper.setTargetPoseDegrees(360);
-    while(!stepper.targetPoseReached()) { stepper.tick();};
-    delay(500);
-    stepper.setTargetPoseDegrees(-360);
-    while(!stepper.targetPoseReached()) { stepper.tick();};
+    // Serial.print(stepper.getTargetSpeedSteps());
+    // stepper.setTargetPoseDegrees(360);
+    // while(!stepper.targetPoseReached()) { stepper.tick();};
+    // delay(500);
+    // stepper.setTargetPoseDegrees(-360);
+    // while(!stepper.targetPoseReached()) { stepper.tick();};
     // delay(1000);
     // delay(500);
     // stepper.setTargetPoseDegrees(-180);
@@ -28,7 +28,11 @@ void loop() {
     stepper.tick();
     if (Serial.available())
         if (Serial.read() == '+')
-            stepper.setTargetPoseDegrees(360);
+            stepper.setTargetPoseDegrees(150, A4988_Stepper::RELATIVE);
+        else if (Serial.read() == 's')
+            stepper.setTargetPoseDegrees(50, A4988_Stepper::RELATIVE);
+        else if (Serial.read() == '-')
+            stepper.setTargetPoseDegrees(-150, A4988_Stepper::RELATIVE);
     // delay(1000);
     // Serial.print("target speed: ");
     // Serial.print(stepper.getTargetSpeedSteps());

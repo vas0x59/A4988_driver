@@ -116,8 +116,8 @@ public:
 
 
 
-    void   setTargetPoseSteps(double pose_s, TargetMode mode = ABSOLUTE) { _target_pose = pose_s*_microstep;  _is_moving = true; _going_to_target = true;};
-    void   setTargetPoseDegrees(double pose_d, TargetMode mode = ABSOLUTE) { setTargetPoseSteps(pose_d*((double)_steps_per_turn / (360.0)));};
+    void   setTargetPoseSteps(double pose_s, TargetMode mode = ABSOLUTE) { _target_pose = mode ? (_current_pose + pose_s*_microstep) : pose_s*_microstep;  _is_moving = true; _going_to_target = true;};
+    void   setTargetPoseDegrees(double pose_d, TargetMode mode = ABSOLUTE) { setTargetPoseSteps(pose_d*((double)_steps_per_turn / (360.0)), mode);};
     // void   setTargetRadians(double pose_r, TargetMode mode = ABSOLUTE) { setTargetSteps(pose_r*((float)_steps_per_turn / (2*PI)));};
     double   getTargetPoseSteps() {return (double)_target_pose/_microstep;};
     double   getTargetPoseDegrees() {return getTargetPoseDegrees()*(360.0/_steps_per_turn);};
@@ -148,6 +148,7 @@ public:
     bool tick() {
         if (_mode == POSE && _going_to_target) {
             long delta = _target_pose - _current_pose;
+            
             _target_speed = (_std_speed)*(delta > 0 ? 1 : -1);
             if (delta == 0) {
                 _going_to_target = false;
@@ -161,23 +162,14 @@ public:
             if (_is_moving && (mc_now - _tick__prev_time) >= mc_b_steps) {
                 _tick__prev_time = mc_now;
                 
-                    
-                    // if(_mode == POSE &&  delta == 0) {
-                    //     stop();
-                    // }
-                    // else {
-                        _current_pose += (_current_speed > 0 ? 1 : -1);
-                        
-                        // STEP
-                        // if (_mode == SPEED)
-                        // Serial.println("STEP: ");
-                        Serial.println(_current_speed);
-                        digitalWrite(_dir_pin, _current_speed > 0);
-                        digitalWrite(_step_pin, 1);
-                        delayMicroseconds(STEP_TIME);
-                        digitalWrite(_step_pin, 0);
-                        delayMicroseconds(STEP_TIME);
-                    // }
+                _current_pose += (_current_speed > 0 ? 1 : -1);
+                
+                // Serial.println(_current_speed);
+                digitalWrite(_dir_pin, _current_speed > 0);
+                digitalWrite(_step_pin, 1);
+                delayMicroseconds(STEP_TIME);
+                digitalWrite(_step_pin, 0);
+                delayMicroseconds(STEP_TIME);
             }
         }
         else

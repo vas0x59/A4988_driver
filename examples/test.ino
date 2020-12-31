@@ -27,12 +27,15 @@ void setup() {
 void loop() {
     stepper.tick();
     if (Serial.available())
-        if (Serial.read() == '+')
+    {
+        char c = Serial.read();
+        if (c == '+')
             stepper.setTargetPoseDegrees(150, A4988_Stepper::RELATIVE);
-        else if (Serial.read() == 's')
+        else if (c == 's')
             stepper.setTargetPoseDegrees(50, A4988_Stepper::RELATIVE);
-        else if (Serial.read() == '-')
+        else if (c == '-')
             stepper.setTargetPoseDegrees(-150, A4988_Stepper::RELATIVE);
+    }
     // delay(1000);
     // Serial.print("target speed: ");
     // Serial.print(stepper.getTargetSpeedSteps());

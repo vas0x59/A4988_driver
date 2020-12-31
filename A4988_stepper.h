@@ -28,6 +28,27 @@ enum Mode {
 //     int min_speed;
 // };
 
+class LinearLeadScrew: public A4988_Stepper
+{
+public:
+    LinearLeadScrew(double screw_step) { _t = (double)_steps_per_turn*(double)_microstep/_screw_step; }
+    double mm2steps(double distance) { return _t * distance; }
+    double getCurrentPos() { return getPoseSteps()*getMicroStep()/_t; }
+private:
+    double _t;
+};
+
+class LinearBelt: public A4988_Stepper
+{
+public:
+    LinearBelt(double belt_step, int number_teeth) { _t = (double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth); }
+    double mm2steps(double distance) { return _t * distance; }
+    double getCurrentPos() { return getPoseSteps()*getMicroStep()/_t; }
+private:
+    double _t;
+};
+
+
 class A4988_Stepper
 {
 private:
@@ -95,12 +116,8 @@ public:
 
 
 
-
-
-
-
-    void   setTargetPoseSteps(double pose_s, TargetMode mode = ABSOLUTE) { _target_pose = pose_s*_microstep;  _is_moving = true; _going_to_target = true;};
-    void   setTargetPoseDegrees(double pose_d, TargetMode mode = ABSOLUTE) { setTargetPoseSteps(pose_d*((double)_steps_per_turn / (360.0)));};
+    void   setTargetPoseSteps(double pose_s, TargetMode mode = ABSOLUTE) { _target_pose = mode ? (_current_pose + pose_s*_microstep) : pose_s*_microstep;  _is_moving = true; _going_to_target = true;};
+    void   setTargetPoseDegrees(double pose_d, TargetMode mode = ABSOLUTE) { setTargetPoseSteps(pose_d*((double)_steps_per_turn / (360.0)), mode);};
     // void   setTargetRadians(double pose_r, TargetMode mode = ABSOLUTE) { setTargetSteps(pose_r*((float)_steps_per_turn / (2*PI)));};
     double   getTargetPoseSteps() {return (double)_target_pose/_microstep;};
     double   getTargetPoseDegrees() {return getTargetPoseDegrees()*(360.0/_steps_per_turn);};
@@ -112,11 +129,11 @@ public:
 
 
 
-    // void setAccelerationSteps(int a) { _acceleration = a;};
-    // void setAccelerationDegrees(int a) { setAccelerationSteps(a*((float) / (360.0)));};
+    void setAccelerationSteps(int a) { _acceleration = a;};
+    void setAccelerationDegrees(int a) { setAccelerationSteps(a*((float) / (360.0)));};
     // void setAccelerationRadians(float a) { setAccelerationSteps(a*((float) / (2*PI));};
-    // int getAccelerationSteps() {return _acceleration;};
-    // int getAccelerationDegrees() {return _acceleration*(360.0/_steps_per_turn);};
+    int getAccelerationSteps() {return _acceleration;};
+    int getAccelerationDegrees() {return _acceleration*(360.0/_steps_per_turn);};
     // float getAccelerationRadians() {return _acceleration*((2*PI)/_steps_per_turn);};
     
     void setMode(Mode mode) {_mode = mode;};
@@ -127,11 +144,11 @@ public:
         _target_speed = 0;
         _is_moving = 0;
     };
-    // void stop() {};
     
     bool tick() {
         if (_mode == POSE && _going_to_target) {
             long delta = _target_pose - _current_pose;
+            
             _target_speed = (_std_speed)*(delta > 0 ? 1 : -1);
             if (delta == 0) {
                 _going_to_target = false;
@@ -145,23 +162,14 @@ public:
             if (_is_moving && (mc_now - _tick__prev_time) >= mc_b_steps) {
                 _tick__prev_time = mc_now;
                 
-                    
-                    // if(_mode == POSE &&  delta == 0) {
-                    //     stop();
-                    // }
-                    // else {
-                        _current_pose += (_current_speed > 0 ? 1 : -1);
-                        
-                        // STEP
-                        // if (_mode == SPEED)
-                        // Serial.println("STEP: ");
-                        Serial.println(_current_speed);
-                        digitalWrite(_dir_pin, _current_speed > 0);
-                        digitalWrite(_step_pin, 1);
-                        delayMicroseconds(STEP_TIME);
-                        digitalWrite(_step_pin, 0);
-                        delayMicroseconds(STEP_TIME);
-                    // }
+                _current_pose += (_current_speed > 0 ? 1 : -1);
+                
+                // Serial.println(_current_speed);
+                digitalWrite(_dir_pin, _current_speed > 0);
+                digitalWrite(_step_pin, 1);
+                delayMicroseconds(STEP_TIME);
+                digitalWrite(_step_pin, 0);
+                delayMicroseconds(STEP_TIME);
             }
         }
         else
@@ -173,6 +181,8 @@ public:
         return _is_moving;
     };
     void reset() {_current_pose = 0; };
+
+    int getMicroStep() { return _microstep; };
     void setMicroStep(MicroStepMode mode) {
         _microstep = mode;
         if (_ms_pins[0] != -1) 

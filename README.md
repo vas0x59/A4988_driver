@@ -12,17 +12,17 @@
 
 Режимы работы  
 
-    POSE - линейное перемещение  
-    SPEED - вращение
+    A4988_Stepper::POSE - линейное перемещение  
+    A4988_Stepper::SPEED - вращение
     setMode(mode); // Установка режима работы
 
 Дробление шага
 
-    FULL_STEP = 1/1
-    HALF_STEP = 1/2
-    QUARTER_STEP = 1/4
-    EIGHTH_STEP = 1/8
-    SIXTEENTH_STEP = 1/16
+    A4988_Stepper::FULL_STEP = 1/1
+    A4988_Stepper::HALF_STEP = 1/2
+    A4988_Stepper::QUARTER_STEP = 1/4
+    A4988_Stepper::EIGHTH_STEP = 1/8
+    A4988_Stepper::SIXTEENTH_STEP = 1/16
     setMicroStep(mode); // Установка дробления шага
     getMicroStep(); // Получение текущего дробления шага
 
@@ -33,8 +33,8 @@
 
 Системы координат в **POSE**
 
-    ABSOLUTE - абсолютная
-    RELATIVE - относительная
+    A4988_Stepper::ABSOLUTE - абсолютная
+    A4988_Stepper::RELATIVE - относительная
 
 Установка скорости в **SPEED**
 

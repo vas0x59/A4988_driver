@@ -109,10 +109,10 @@ public:
 
     
     double leadScrewMM2STEPS(double distance, double screw_step) { return ((double)_steps_per_turn*(double)_microstep/screw_step) * distance; }
-    double getCurrentPos(double screw_step) { return getPoseSteps()*getMicroStep()/((double)_steps_per_turn*(double)_microstep/screw_step); }
+    double getCurrentPosScrew(double screw_step) { return getPoseSteps()*getMicroStep()/((double)_steps_per_turn*(double)_microstep/screw_step); }
 
     double beltMM2STEPS(double distance, double belt_step, int number_teeth) { return ((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)) * distance; }
-    double getCurrentPos(double belt_step, int number_teeth) { return getPoseSteps()*getMicroStep()/((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)); }
+    double getCurrentPosBelt(double belt_step, int number_teeth) { return getPoseSteps()*getMicroStep()/((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)); }
 
 
 

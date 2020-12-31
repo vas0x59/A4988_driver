@@ -95,7 +95,8 @@ public:
 
 
 
-
+    double leadScrew(double distance, double screw_step) { return ((double)_steps_per_turn*(double)_microstep/screw_step) * distance; }
+    double belt(double distance, double belt_step, int number_teeth) { return ((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)) * distance; }
 
 
 

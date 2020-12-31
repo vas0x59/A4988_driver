@@ -129,11 +129,11 @@ public:
 
 
 
-    // void setAccelerationSteps(int a) { _acceleration = a;};
-    // void setAccelerationDegrees(int a) { setAccelerationSteps(a*((float) / (360.0)));};
+    void setAccelerationSteps(int a) { _acceleration = a;};
+    void setAccelerationDegrees(int a) { setAccelerationSteps(a*((float) / (360.0)));};
     // void setAccelerationRadians(float a) { setAccelerationSteps(a*((float) / (2*PI));};
-    // int getAccelerationSteps() {return _acceleration;};
-    // int getAccelerationDegrees() {return _acceleration*(360.0/_steps_per_turn);};
+    int getAccelerationSteps() {return _acceleration;};
+    int getAccelerationDegrees() {return _acceleration*(360.0/_steps_per_turn);};
     // float getAccelerationRadians() {return _acceleration*((2*PI)/_steps_per_turn);};
     
     void setMode(Mode mode) {_mode = mode;};
@@ -144,7 +144,6 @@ public:
         _target_speed = 0;
         _is_moving = 0;
     };
-    // void stop() {};
     
     bool tick() {
         if (_mode == POSE && _going_to_target) {
@@ -190,6 +189,7 @@ public:
         return _is_moving;
     };
     void reset() {_current_pose = 0; };
+
     int getMicroStep() { return _microstep; };
     void setMicroStep(MicroStepMode mode) {
         _microstep = mode;

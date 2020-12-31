@@ -1,4 +1,5 @@
 #pragma once
+
 #include <Arduino.h>
 
 namespace A4988_Stepper {
@@ -26,27 +27,6 @@ enum Mode {
 //     int max_speed;
 //     int min_speed;
 // };
-
-// class LinearLeadScrew: public A4988_Stepper
-// {
-// public:
-//     LinearLeadScrew(double screw_step) { _t = (double)_steps_per_turn*(double)_microstep/_screw_step; }
-//     double mm2steps(double distance) { return _t * distance; }
-//     double getCurrentPos() { return getPoseSteps()*getMicroStep()/_t; }
-// private:
-//     double _t;
-// };
-
-// class LinearBelt: public A4988_Stepper
-// {
-// public:
-//     LinearBelt(double belt_step, int number_teeth) { _t = (double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth); }
-//     double mm2steps(double distance) { return _t * distance; }
-//     double getCurrentPos() { return getPoseSteps()*getMicroStep()/_t; }
-// private:
-//     double _t;
-// };
-
 
 class A4988_Stepper
 {
@@ -127,12 +107,21 @@ public:
     // double getPoseRadians() {return _current_pose*((2*PI)/_steps_per_turn);};
 
 
+    
+    double leadScrewMM2STEPS(double distance, double screw_step) { return ((double)_steps_per_turn*(double)_microstep/screw_step) * distance; }
+    double getCurrentPos(double screw_step) { return getPoseSteps()*getMicroStep()/((double)_steps_per_turn*(double)_microstep/screw_step); }
 
-    // void setAccelerationSteps(int a) { _acceleration = a;};
-    // void setAccelerationDegrees(int a) { setAccelerationSteps(a*((float) / (360.0)));};
-    // // void setAccelerationRadians(float a) { setAccelerationSteps(a*((float) / (2*PI));};
-    // int getAccelerationSteps() {return _acceleration;};
-    // int getAccelerationDegrees() {return _acceleration*(360.0/_steps_per_turn);};
+    double beltMM2STEPS(double distance, double belt_step, int number_teeth) { return ((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)) * distance; }
+    double getCurrentPos(double belt_step, int number_teeth) { return getPoseSteps()*getMicroStep()/((double)_steps_per_turn*(double)_microstep/(belt_step*(double)number_teeth)); }
+
+
+
+
+    void setAccelerationSteps(int a) { _acceleration = a;};
+    void setAccelerationDegrees(int a) { setAccelerationSteps(a*((float)_steps_per_turn / (360.0))); };
+    // void setAccelerationRadians(float a) { setAccelerationSteps(a*((float) / (2*PI));};
+    int getAccelerationSteps() {return _acceleration;};
+    int getAccelerationDegrees() {return _acceleration*(360.0/_steps_per_turn);};
     // float getAccelerationRadians() {return _acceleration*((2*PI)/_steps_per_turn);};
     
     void setMode(Mode mode) {_mode = mode;};
